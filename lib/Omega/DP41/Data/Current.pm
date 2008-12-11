@@ -1,107 +1,90 @@
 package Omega::DP41::Data::Current;
-
+#############################################
+##           Omega::DP41::Data::Current    ##
+##				SJK 12-03-08			   ##
+##					v0.3				   ##
+##   Retrieve Current Reading from DP41    ##
+#############################################
 use warnings;
 use strict;
+use Device::SerialPort;
+use base 'Exporter';
+our $VERSION = '0.3';
+our @EXPORT = qw(serial_data);
 
 =head1 NAME
-
-Omega::DP41::Data::Current - The great new Omega::DP41::Data::Current!
-
-=head1 VERSION
-
-Version 0.01
-
-=cut
-
-our $VERSION = '0.01';
-
+DP41::Data::Current - Module for retrieving data from an Omega brand Thermacouple. 
 
 =head1 SYNOPSIS
+use DP41::Data::Current;
+$temp = serial_data();
 
-Quick summary of what the module does.
+=head1 DESCRIPTION
+Module for retrieving the current reading on a Omega DP41 Thermacouple. Module has been tested on Omega DP41-RTD only, unknown if it will work with other models. Requires Device::SerialPort.
 
-Perhaps a little code snippet.
+=head1 AUTHOR/LICENSE
+Perl Module DP41::Data::Current, retrieves current reading from Omega DP41-RTD Thermacouple.
+Copyright (C) 2008 Stanford University, Authored by Sam Kerr.
 
-    use Omega::DP41::Data::Current;
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 2 of the License, or
+(at your option) any later version.
 
-    my $foo = Omega::DP41::Data::Current->new();
-    ...
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-=head1 EXPORT
+You should have received a copy of the GNU General Public License
+along with this program; if not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301  USA
 
-A list of functions that can be exported.  You can delete this section
-if you don't export anything, such as for a purely object-oriented module.
 
-=head1 FUNCTIONS
+=head2 Functions
+One function is exported by default (serial_data).
 
-=head2 function1
+=head3 serial_data
+$temp = serial_data();
+
+Returns the current reading from a DP41 Thermacouple.
 
 =cut
 
-sub function1 {
+sub serial_data{
+my $current;
+my $device = "/dev/ttyS0"; 
+my $serial = Device::SerialPort-> new($device, 1);
+die "Can't open serial port $serial: $^E\n" unless ($serial);
+	
+	$serial->user_msg(0);
+	$serial->databits(7);
+	$serial->baudrate(9600);
+	$serial->parity("odd");
+	$serial->stopbits(1);
+	$serial->handshake("none");
+	$serial->datatype('raw');
+	$serial->dtr_active('T');
+	$serial->stty_icrnl(0);
+	$serial->write_settings;
+
+print $serial->write("*X01\r"); 
+my $STALL_DEFAULT=5; 
+my $timeout=$STALL_DEFAULT;
+$serial->read_char_time(0); 
+$serial->read_const_time(1000); 
+my $chars=0;
+my $buffer="";
+my ($count,$saw)=$serial->read(255); 
+
+if ($count > 0) {
+ $chars+=$count;
+ $buffer.=$saw;
+ $current = $buffer;
+ }
+
+$current =~ s/^X......//g;
+$current =~ s/\.{1}//g;
+return $current;
+$serial->close();
 }
-
-=head2 function2
-
-=cut
-
-sub function2 {
-}
-
-=head1 AUTHOR
-
-S. Kerr, C<< <kerr at cpan.org> >>
-
-=head1 BUGS
-
-Please report any bugs or feature requests to C<bug-omega-dp41-data-current at rt.cpan.org>, or through
-the web interface at L<http://rt.cpan.org/NoAuth/ReportBug.html?Queue=Omega-DP41-Data-Current>.  I will be notified, and then you'll
-automatically be notified of progress on your bug as I make changes.
-
-
-
-
-=head1 SUPPORT
-
-You can find documentation for this module with the perldoc command.
-
-    perldoc Omega::DP41::Data::Current
-
-
-You can also look for information at:
-
-=over 4
-
-=item * RT: CPAN's request tracker
-
-L<http://rt.cpan.org/NoAuth/Bugs.html?Dist=Omega-DP41-Data-Current>
-
-=item * AnnoCPAN: Annotated CPAN documentation
-
-L<http://annocpan.org/dist/Omega-DP41-Data-Current>
-
-=item * CPAN Ratings
-
-L<http://cpanratings.perl.org/d/Omega-DP41-Data-Current>
-
-=item * Search CPAN
-
-L<http://search.cpan.org/dist/Omega-DP41-Data-Current/>
-
-=back
-
-
-=head1 ACKNOWLEDGEMENTS
-
-
-=head1 COPYRIGHT & LICENSE
-
-Copyright 2008 S. Kerr, all rights reserved.
-
-This program is free software; you can redistribute it and/or modify it
-under the same terms as Perl itself.
-
-
-=cut
-
-1; # End of Omega::DP41::Data::Current
