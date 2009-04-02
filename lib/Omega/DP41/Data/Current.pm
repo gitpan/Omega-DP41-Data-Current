@@ -1,9 +1,9 @@
 package Omega::DP41::Data::Current;
 use warnings;
 use strict;
-use Device::SerialPort;
+require Device::SerialPort;
 use base 'Exporter';
-our $VERSION = '0.3.1';
+our $VERSION = '0.3.2';
 our @EXPORT = qw(serial_data);
 
 =head1 NAME
@@ -26,7 +26,7 @@ Module for retrieving the current reading on a Omega DP41 Thermacouple. Module h
 =head1 AUTHOR/LICENSE
 
 Perl Module DP41::Data::Current, retrieves current reading from Omega DP41-RTD Thermacouple.
-Copyright (C) 2008 Stanford University, Authored by Sam Kerr kerr@cpan.org
+Copyright (C) 2008-2009 Stanford University, Authored by Sam Kerr kerr@cpan.org
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

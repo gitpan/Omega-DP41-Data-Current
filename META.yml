@@ -1,9 +1,9 @@
 --- #YAML:1.0
 name:               Omega-DP41-Data-Current
-version:            0.3.1
+version:            0.3.2
 abstract:           ~
 author:
-    - S. Kerr <kerr@cpan.org>
+    - Sam Kerr <kerr@cpan.org>
 license:            perl
 distribution_type:  module
 configure_requires:

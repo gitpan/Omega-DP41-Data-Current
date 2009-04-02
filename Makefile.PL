@@ -4,7 +4,7 @@ use ExtUtils::MakeMaker;
 
 WriteMakefile(
     NAME                => 'Omega::DP41::Data::Current',
-    AUTHOR              => 'S. Kerr <kerr@cpan.org>',
+    AUTHOR              => 'Sam Kerr <kerr@cpan.org>',
     VERSION_FROM        => 'lib/Omega/DP41/Data/Current.pm',
     ABSTRACT_FROM       => 'lib/Omega/DP41/Data/Current.pm',
     ($ExtUtils::MakeMaker::VERSION >= 6.3002
