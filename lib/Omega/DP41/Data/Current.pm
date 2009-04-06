@@ -1,10 +1,21 @@
 package Omega::DP41::Data::Current;
 use warnings;
 use strict;
-require Device::SerialPort;
 use base 'Exporter';
-our $VERSION = '0.3.2';
+our $VERSION = '0.3.3';
 our @EXPORT = qw(serial_data);
+####################
+### OS Dependant ###
+####################
+BEGIN {
+   require autouse;
+   autouse->import(
+     $^O =~ /^win32/i ? "Win32::SerialPort" : "Device::SerialPort"
+   );
+}
+########################
+### End OS Dependant ###
+########################
 
 =head1 NAME
 
@@ -17,15 +28,15 @@ $temp = serial_data();
 
 =head1 REQUIRES
 
-Requires Device::SerialPort
+Requires Device::SerialPort or Win32::SerialPort depending on platform.
 
 =head1 DESCRIPTION
 
-Module for retrieving the current reading on a Omega DP41 Thermacouple. Module has been tested on Omega DP41-RTD only, unknown if it will work with other models. Requires Device::SerialPort.
+Module for retrieving the current reading on a Omega DP41 Thermocouple. Module has been tested on Omega DP41-RTD only, unknown if it will work with other models. Requires Device::SerialPort or Win32::SerialPort depending on platform.
 
 =head1 AUTHOR/LICENSE
 
-Perl Module DP41::Data::Current, retrieves current reading from Omega DP41-RTD Thermacouple.
+Perl Module DP41::Data::Current, retrieves current reading from Omega DP41-RTD Thermocouple.
 Copyright (C) 2008-2009 Stanford University, Authored by Sam Kerr kerr@cpan.org
 
 This program is free software; you can redistribute it and/or modify
@@ -51,6 +62,11 @@ One function is exported by default (serial_data).
 
 $temp = serial_data();
 Returns the current reading from a DP41 Thermacouple.
+
+=head2 Changelog
+
+04-02-09 - Modified to run on Win32 (experimental!)
+
 
 =cut
 
