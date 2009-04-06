@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:               Omega-DP41-Data-Current
-version:            0.3.3
+version:            0.3.4
 abstract:           ~
 author:
     - Sam Kerr <kerr@cpan.org>
@@ -9,7 +9,8 @@ distribution_type:  module
 configure_requires:
     ExtUtils::MakeMaker:  0
 requires:
-    Test::More:  0
+    Device::SerialPort:  0
+    Test::More:          0
 no_index:
     directory:
         - t

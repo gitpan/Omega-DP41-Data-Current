@@ -2,7 +2,7 @@ package Omega::DP41::Data::Current;
 use warnings;
 use strict;
 use base 'Exporter';
-our $VERSION = '0.3.3';
+our $VERSION = '0.3.4';
 our @EXPORT = qw(serial_data);
 ####################
 ### OS Dependant ###
@@ -61,11 +61,13 @@ One function is exported by default (serial_data).
 =head3 serial_data
 
 $temp = serial_data();
+
 Returns the current reading from a DP41 Thermacouple.
 
 =head2 Changelog
 
-04-02-09 - Modified to run on Win32 (experimental!)
+04-06-09 - v0.3.4 Added  PREREQ_PM  => Device::SerialPort to makefile
+04-02-09 - v0.3.2 Modified to run on Win32 (experimental!)
 
 
 =cut
